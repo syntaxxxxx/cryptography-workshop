@@ -14,6 +14,9 @@ class MainActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
 
+        //initialize cipherImpl
+        val cipherImpl = KeystoreCipherImpl(this)
+
         btnAdd.setOnClickListener {
             if (etPlainText.text.isNotEmpty()) {
                 val item = Item(etPlainText.text.toString())
