@@ -11,6 +11,7 @@ import java.math.BigInteger
 import java.security.KeyPair
 import java.security.KeyPairGenerator
 import java.security.KeyStore
+import java.security.PrivateKey
 import java.util.*
 import javax.security.auth.x500.X500Principal
 
@@ -22,6 +23,26 @@ class KeystoreWrapper(private val context: Context) {
         private const val keystoreAliasName = "AndroidAlias"
         private const val KEYSTORE_TYPE = "AndroidKeyStore"
         private const val RSA_ALGORITHM = "RSA"
+    }
+
+    private val keyStore: KeyStore = createAndroidKeyStore()
+
+    fun isAndroidKeyStoreAsymmetricKeyExist(): Boolean {
+        return keyStore.containsAlias(keystoreAliasName)
+    }
+    
+    /**
+     * @return asymmetric keypair from Android Key Store or null if any key with given alias exists
+     */
+    fun androidKeyStoreAsymmetricKeyPair(): KeyPair? {
+        val privateKey = keyStore.getKey(keystoreAliasName, null) as PrivateKey?
+        val publicKey = keyStore.getCertificate(keystoreAliasName)?.publicKey
+
+        return if (privateKey != null && publicKey != null) {
+            KeyPair(publicKey, privateKey)
+        } else {
+            null
+        }
     }
 
     /**
