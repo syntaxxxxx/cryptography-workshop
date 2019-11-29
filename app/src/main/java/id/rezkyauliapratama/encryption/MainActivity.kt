@@ -16,11 +16,8 @@ class MainActivity : AppCompatActivity() {
         val adapter = MainAdapter()
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
-
-        //initialize cipherImpl
-        val cipherImpl = KeystoreCipherImpl(this)
-        val sharedPreferences = getSharedPreferences(SharedPref.SECURED_PREFS_NAME, Context.MODE_PRIVATE)
-        val sharedPref = SharedPref(sharedPreferences,cipherImpl)
+        
+        val cipherImpl = (applicationContext as App).getCipherImpl()
 
         btnAdd.setOnClickListener {
             if (etPlainText.text.isNotEmpty()) {
