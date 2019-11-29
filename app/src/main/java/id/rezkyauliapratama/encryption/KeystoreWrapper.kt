@@ -8,10 +8,7 @@ import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
 import java.lang.IllegalStateException
 import java.math.BigInteger
-import java.security.KeyPair
-import java.security.KeyPairGenerator
-import java.security.KeyStore
-import java.security.PrivateKey
+import java.security.*
 import java.util.*
 import javax.security.auth.x500.X500Principal
 
@@ -23,6 +20,9 @@ class KeystoreWrapper(private val context: Context) {
         private const val keystoreAliasName = "AndroidAlias"
         private const val KEYSTORE_TYPE = "AndroidKeyStore"
         private const val RSA_ALGORITHM = "RSA"
+        const val AES_MASTER_KEY = "AES_MASTER"
+        const val AES_VECTOR_KEY = "AES_VECTOR"
+        private const val AES_BYTE_KEY_SIZE = 16
     }
 
     private val keyStore: KeyStore = createAndroidKeyStore()
@@ -95,6 +95,20 @@ class KeystoreWrapper(private val context: Context) {
             build()
         }
         generator.initialize(keyGenParameterSpec)
+    }
+
+    fun createDefaultSymmetricKey(): HashMap<String, ByteArray> {
+        val key = ByteArray(AES_BYTE_KEY_SIZE)
+        val ivSpec = ByteArray(AES_BYTE_KEY_SIZE)
+        SecureRandom().apply {
+            nextBytes(key)
+            nextBytes(ivSpec)
+        }
+
+        return hashMapOf(
+            AES_MASTER_KEY to key,
+            AES_VECTOR_KEY to ivSpec
+        )
     }
 
     private fun createAndroidKeyStore(): KeyStore {
