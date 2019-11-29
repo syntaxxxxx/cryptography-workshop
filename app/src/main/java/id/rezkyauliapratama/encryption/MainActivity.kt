@@ -19,7 +19,8 @@ class MainActivity : AppCompatActivity() {
 
         btnAdd.setOnClickListener {
             if (etPlainText.text.isNotEmpty()) {
-                val item = Item(etPlainText.text.toString())
+                val cipherText = cipherImpl.encryptRSA(etPlainText.text.toString().toByteArray())
+                val item = Item(etPlainText.text.toString(), cipherText)
                 adapter.add(item)
             }
         }

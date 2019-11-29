@@ -34,7 +34,7 @@ class KeystoreCipherImpl(private val context: Context) {
     }
 
     //method to encrypt plain text
-    private fun encryptRSA(value: ByteArray?): String? {
+    fun encryptRSA(value: ByteArray?): String? {
         if (value == null || masterKeyAsymmetric?.public == null) {
             return null
         }
@@ -50,7 +50,7 @@ class KeystoreCipherImpl(private val context: Context) {
     }
 
     //method to decrypt cipher text
-    private fun decryptRSA(value: String): ByteArray? {
+    fun decryptRSA(value: String): ByteArray? {
         if (masterKeyAsymmetric?.private == null) {
             return null
         }
