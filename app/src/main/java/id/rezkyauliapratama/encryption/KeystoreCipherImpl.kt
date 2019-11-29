@@ -38,10 +38,16 @@ class KeystoreCipherImpl(private val context: Context) {
 
         masterKeyAsymmetric = keystoreWrapper.androidKeyStoreAsymmetricKeyPair()
 
+    }
+
+    fun createAesKey(){
         //assign value for var aesKey and aesVectorSpecs
         val aesSpec = keystoreWrapper.createDefaultSymmetricKey()
         aesKey = aesSpec[KeystoreWrapper.AES_MASTER_KEY]
         aesVectorSpecs = aesSpec[KeystoreWrapper.AES_VECTOR_KEY]
+
+        val keyEncrypted = encryptRSA(aesKey) ?: ""
+        val ivEncrypted = encryptRSA(aesVectorSpecs) ?: ""
     }
 
     fun decrypt(encrypted: String): String {
@@ -51,7 +57,6 @@ class KeystoreCipherImpl(private val context: Context) {
             val aesCipher = Cipher.getInstance(AES_TRANSFORMATION)
             val iv = IvParameterSpec(aesVectorSpecs)
             val skeySpec = SecretKeySpec(aesKey, AES_ALGORITHM)
-
             aesCipher.init(Cipher.DECRYPT_MODE, skeySpec, iv)
 
             val original = aesCipher.doFinal(encrypted.decodeToByteArray())

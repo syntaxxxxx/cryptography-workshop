@@ -17,6 +17,7 @@ class MainActivity : AppCompatActivity() {
 
         //initialize cipherImpl
         val cipherImpl = KeystoreCipherImpl(this)
+        cipherImpl.createAesKey()
 
         btnAdd.setOnClickListener {
             if (etPlainText.text.isNotEmpty()) {
