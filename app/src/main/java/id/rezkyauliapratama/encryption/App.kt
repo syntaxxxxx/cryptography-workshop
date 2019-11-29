@@ -2,6 +2,7 @@ package id.rezkyauliapratama.encryption
 
 import android.app.Application
 import android.content.Context
+import com.facebook.stetho.Stetho
 
 class App : Application() {
 
@@ -12,8 +13,13 @@ class App : Application() {
         super.onCreate()
         //initialize cipherImpl
         cipherImpl = KeystoreCipherImpl(this)
-        val sharedPreferences = getSharedPreferences(SharedPref.SECURED_PREFS_NAME, Context.MODE_PRIVATE)
-         sharedPref = SharedPref(sharedPreferences,cipherImpl)
+        val sharedPreferences =
+            getSharedPreferences(SharedPref.SECURED_PREFS_NAME, Context.MODE_PRIVATE)
+        sharedPref = SharedPref(sharedPreferences, cipherImpl)
+
+        if (BuildConfig.DEBUG) {
+            Stetho.initializeWithDefaults(this)
+        }
     }
 
     //Singleton , only 1 instance exist

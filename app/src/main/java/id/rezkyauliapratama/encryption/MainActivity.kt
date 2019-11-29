@@ -16,7 +16,7 @@ class MainActivity : AppCompatActivity() {
         val adapter = MainAdapter()
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
-        
+
         val cipherImpl = (applicationContext as App).getCipherImpl()
 
         btnAdd.setOnClickListener {
