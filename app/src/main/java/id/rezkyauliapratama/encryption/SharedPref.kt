@@ -8,7 +8,7 @@ class SharedPref(
 ) {
 
     companion object {
-        private const val SECURED_PREFS_NAME = "securedSharedPref"
+        const val SECURED_PREFS_NAME = "securedSharedPref"
 
         private const val SECURED_PREFIX = "cipher_"
         private const val PREF_AES_KEY = SECURED_PREFIX + "securedKey01"
