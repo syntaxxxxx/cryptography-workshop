@@ -30,7 +30,7 @@ class KeystoreWrapper(private val context: Context) {
     fun isAndroidKeyStoreAsymmetricKeyExist(): Boolean {
         return keyStore.containsAlias(keystoreAliasName)
     }
-    
+
     /**
      * @return asymmetric keypair from Android Key Store or null if any key with given alias exists
      */
