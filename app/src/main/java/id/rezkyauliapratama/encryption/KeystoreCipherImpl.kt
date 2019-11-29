@@ -5,12 +5,16 @@ import android.util.Base64
 import java.security.KeyPair
 import java.security.spec.MGF1ParameterSpec
 import javax.crypto.Cipher
+import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.OAEPParameterSpec
 import javax.crypto.spec.PSource
+import javax.crypto.spec.SecretKeySpec
 
 class KeystoreCipherImpl(private val context: Context) {
 
     companion object {
+        private const val AES_ALGORITHM = "AES"
+        private const val AES_TRANSFORMATION = "AES/CBC/PKCS5Padding"
         private const val SHA_256 = "SHA-256"
         private const val SHA_1 = "SHA-1"
         private const val MGF = "MGF1"
@@ -19,6 +23,8 @@ class KeystoreCipherImpl(private val context: Context) {
 
     //KeyPair that contains Public key and Private key
     private var masterKeyAsymmetric: KeyPair?
+    private var aesKey: ByteArray? = null
+    private var aesVectorSpecs: ByteArray? = null
 
     val keystoreWrapper: KeystoreWrapper by lazy {
         KeystoreWrapper(context)
@@ -31,6 +37,46 @@ class KeystoreCipherImpl(private val context: Context) {
         }
 
         masterKeyAsymmetric = keystoreWrapper.androidKeyStoreAsymmetricKeyPair()
+
+        //assign value for var aesKey and aesVectorSpecs
+        val aesSpec = keystoreWrapper.createDefaultSymmetricKey()
+        aesKey = aesSpec[KeystoreWrapper.AES_MASTER_KEY]
+        aesVectorSpecs = aesSpec[KeystoreWrapper.AES_VECTOR_KEY]
+    }
+
+    fun decrypt(encrypted: String): String {
+        if (encrypted.isEmpty()) return ""
+
+        return try {
+            val aesCipher = Cipher.getInstance(AES_TRANSFORMATION)
+            val iv = IvParameterSpec(aesVectorSpecs)
+            val skeySpec = SecretKeySpec(aesKey, AES_ALGORITHM)
+
+            aesCipher.init(Cipher.DECRYPT_MODE, skeySpec, iv)
+
+            val original = aesCipher.doFinal(encrypted.decodeToByteArray())
+            String(original, Charsets.UTF_8)
+        } catch (e: Exception) {
+            ""
+        }
+
+    }
+
+    fun encrypt(value: String): String {
+        if (value.isEmpty()) return ""
+
+        return try {
+            val aesCipher = Cipher.getInstance(AES_TRANSFORMATION)
+            val iv = IvParameterSpec(aesVectorSpecs)
+            val skeySpec = SecretKeySpec(aesKey, AES_ALGORITHM)
+            aesCipher.init(Cipher.ENCRYPT_MODE, skeySpec, iv)
+
+            val encrypted = aesCipher.doFinal(value.toByteArray(Charsets.UTF_8))
+            encrypted.encodeToString()
+        } catch (e: Exception) {
+            ""
+        }
+
     }
 
     //method to encrypt plain text
