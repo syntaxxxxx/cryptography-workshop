@@ -1,5 +1,7 @@
 package id.rezkyauliapratama.encryption
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,7 +19,8 @@ class MainActivity : AppCompatActivity() {
 
         //initialize cipherImpl
         val cipherImpl = KeystoreCipherImpl(this)
-        cipherImpl.createAesKey()
+        val sharedPreferences = getSharedPreferences(SharedPref.SECURED_PREFS_NAME, Context.MODE_PRIVATE)
+        val sharedPref = SharedPref(sharedPreferences,cipherImpl)
 
         btnAdd.setOnClickListener {
             if (etPlainText.text.isNotEmpty()) {
