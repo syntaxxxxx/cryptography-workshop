@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
+import java.nio.charset.Charset
 
 class MainActivity : AppCompatActivity() {
 
@@ -19,8 +20,10 @@ class MainActivity : AppCompatActivity() {
 
         btnAdd.setOnClickListener {
             if (etPlainText.text.isNotEmpty()) {
-                val cipherText = cipherImpl.encryptRSA(etPlainText.text.toString().toByteArray())
-                val item = Item(etPlainText.text.toString(), cipherText)
+                val cipherText = cipherImpl.encryptRSA(etPlainText.text.toString().toByteArray(
+                    Charsets.UTF_8))
+                val plainText = cipherText?.let { cipherImpl.decryptRSA(cipherText)?.toString(Charsets.UTF_8) } ?: ""
+                val item = Item(plaintext = plainText, cipherText = cipherText)
                 adapter.add(item)
             }
         }

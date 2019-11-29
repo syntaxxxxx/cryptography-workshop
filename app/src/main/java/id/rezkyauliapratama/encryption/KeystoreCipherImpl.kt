@@ -67,8 +67,8 @@ class KeystoreCipherImpl(private val context: Context) {
     private val sp by lazy {
         OAEPParameterSpec(SHA_256, MGF, MGF1ParameterSpec(SHA_1), PSource.PSpecified.DEFAULT)
     }
-
-    private fun String.decodeToByteArray(): ByteArray = Base64.decode(this, Base64.DEFAULT)
-
-    private fun ByteArray.encodeToString(): String = Base64.encodeToString(this, Base64.DEFAULT)
 }
+
+fun String.decodeToByteArray(): ByteArray = Base64.decode(this, Base64.NO_WRAP)
+
+fun ByteArray.encodeToString(): String = Base64.encodeToString(this, Base64.NO_WRAP)
