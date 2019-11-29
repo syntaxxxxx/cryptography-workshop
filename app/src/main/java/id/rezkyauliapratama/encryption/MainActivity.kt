@@ -20,9 +20,8 @@ class MainActivity : AppCompatActivity() {
 
         btnAdd.setOnClickListener {
             if (etPlainText.text.isNotEmpty()) {
-                val cipherText = cipherImpl.encryptRSA(etPlainText.text.toString().toByteArray(
-                    Charsets.UTF_8))
-                val plainText = cipherText?.let { cipherImpl.decryptRSA(cipherText)?.toString(Charsets.UTF_8) } ?: ""
+                val cipherText = cipherImpl.encrypt(etPlainText.text.toString())
+                val plainText = cipherImpl.decrypt(cipherText)
                 val item = Item(plaintext = plainText, cipherText = cipherText)
                 adapter.add(item)
             }
