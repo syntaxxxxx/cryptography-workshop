@@ -37,7 +37,6 @@ class SharedPref(
         set(value) = sharedPreferences.put(PREF_IV_SPEC, value)
         get() = sharedPreferences.get(PREF_IV_SPEC, String::class.java)
 
-
     @Suppress("UNCHECKED_CAST", "IMPLICIT_CAST_TO_ANY")
     protected fun <T> SharedPreferences.get(key: String, clazz: Class<T>): T =
         when (clazz) {

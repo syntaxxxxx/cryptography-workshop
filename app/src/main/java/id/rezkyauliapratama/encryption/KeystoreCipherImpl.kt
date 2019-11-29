@@ -40,6 +40,11 @@ class KeystoreCipherImpl(private val context: Context) {
 
     }
 
+    fun setAesKey(key: String, vectorSpec: String) {
+        aesKey = decryptRSA(key)
+        aesVectorSpecs = decryptRSA(vectorSpec)
+    }
+
     fun createAesKey(): Pair<String, String> {
         //assign value for var aesKey and aesVectorSpecs
         val aesSpec = keystoreWrapper.createDefaultSymmetricKey()
